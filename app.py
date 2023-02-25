@@ -1,11 +1,12 @@
+from datetime import datetime
 from flask import Flask, render_template, request, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
 from venmo_api import Client
-import json
-import requests 
 from werkzeug.utils import secure_filename
+
+import json
 import os
+import requests 
 
 app = Flask(__name__)
 UPLOAD_FOLDER = 'assets/'
@@ -17,11 +18,9 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 item_list = []
 
-
 db = SQLAlchemy(app)
 
-#build login required module
-
+# build login required module
 class Expenses(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
@@ -31,7 +30,6 @@ class Expenses(db.Model):
 
     def __repr__(self):
         return "Expense: " + self.title +" "+ str(self.id)
-
 
 class Debts(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -59,7 +57,6 @@ def get_user_id(username):
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS 
-
 
 @app.route('/login',methods = ['GET','POST'])
 def index():
@@ -107,7 +104,6 @@ def delete_expense(id):
     db.session.delete(expense)
     db.session.commit()
     return redirect('/expenses')
-
 
 @app.route('/debts',methods = ['GET','POST'])
 def debts():
@@ -168,7 +164,6 @@ def paynow(id):
     venmo.payment.send_money(payment_amount,payment_description,payment_person)
     return redirect('/debts')
 
-
 @app.route('/calendar')
 def calendar():
     return "This is Calendar Page"
@@ -222,5 +217,3 @@ def scan_reciept():
     
 if __name__ == "__main__":
     app.run(debug=True)
-    
- 
