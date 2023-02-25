@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+
+{% block head %} 
+<title>Debts Page </title>
+{% endblock %}
+
+{% block body %}
+<h1>All Debts</h1>
+
+<hr>
+<form action = '/debts' method = 'POST'>
+    Title: <input type='text' name = 'title' id = 'title'>
+    <br>
+    Amount: <input type='float' name = 'amount' id = 'amount'>
+    <br>
+    Debt Type: <label for = "debt_type"></label>
+    <select name = "debt_type" id="debt_type"> 
+        <option value = "Request">Request</option>
+        <option value = "Pay">Pay</option>
+    </select>
+    <br>
+    Payee: <label for = "payee"></label>
+    <select name = "payee" id="payee"> 
+        {% for friend in friends %}
+        <option value = "{{friend.username}}">{{friend.username}}</option>
+        {% endfor %}
+    </select>
+    <br>
+    <input type='submit' value="Add Debt">
+</form>
+<hr>
+    <table class="table table-dark">
+    <tr>
+        <th>Title</th>
+        <th>Amount</th>
+        <th>Debt Type</th>   
+        <th>Payee</th>   
+    </tr>
+    
+    {% for debt in debts %}
+    <tr>
+        <td>{{debt.title}}</td>
+        <td>{{debt.amount}}</td>
+        <td>{{debt.debt_type}}</td>
+        <td>{{debt.payee}}</td>
+        <td>
+            <a href = "debts/delete/{{debt.id}}">Delete</a>
+        </td>
+        <td>
+            <a href = "debts/edit/{{debt.id}}">Edit</a>
+        </td>
+        
+    </tr>
+    <tr class="hide">
+        <td><button id = "{{debt.id}}" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#paytypeNow{{debt.id}}">{{debt.debt_type}} Now</button></td>
+        <div class="modal fade" id="paytypeNow{{debt.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Request Now</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  Are you sure you would like to {{debt.debt_type}} {{debt.payee}} for {{debt.amount}} now?
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <form method = "post" action ="/{{debt.debt_type}}now/{{debt.id}}">
+                    <button tinput type ="submit" type="button" class="btn btn-primary">{{debt.debt_type}} Now</button>
+                 </form>  
+                </div>
+              </div>
+            </div>
+          </div>
+        <td><button type="button" class="btn btn-secondary">{{debt.debt_type}} Incrementally</button></td>
+        {% if debt.debt_type == "Pay" %}
+            <td><button type="button" class="btn btn-secondary">Pay Based on Spending</button></td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+    
+    </table>
+{% endblock %} 
