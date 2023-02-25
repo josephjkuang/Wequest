@@ -208,7 +208,6 @@ def scan_reciept():
             flash('Allowed image types are - png, jpg, jpeg, gif')
             return redirect(request.url)
 
-     
     else:
         if(len(item_list)==0):
             item_list=[]

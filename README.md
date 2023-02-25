@@ -40,7 +40,9 @@ pip3 install plotly
 pip3 install psycopg2-binary
 pip3 install requests
 pip3 install Streamlit
+pip3 install streamlit_modal
 pip3 install venmo_api
+pip3 install watchdog
 pip3 install werkzeug
 ```
 
